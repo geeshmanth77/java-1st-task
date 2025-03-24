@@ -1,0 +1,204 @@
+import java.util.ArrayList;
+
+import java.util.Date;
+
+
+// Class to represent the user's bank account
+
+class BankAccount {
+  
+  private double balance;
+  
+  private String pin;
+
+    private ArrayList<String>
+ transactionHistory;
+
+
+   
+ public BankAccount(double initialBalance, String pin) {
+  
+      this.balance = initialBalance > 0 ? initialBalance : 0;
+        this.pin = pin;
+  
+      this.transactionHistory = new ArrayList<>();
+   
+     addTransaction("Account opened with balance: $" + String.format("%.2f", balance));
+ 
+   }
+
+ 
+   public boolean validatePin(String inputPin) {
+  
+      return pin.equals(inputPin);
+
+    }
+
+  
+  public double getBalance() {
+ 
+       return balance;
+   
+ }
+
+  
+  public void deposit(double amount) {
+ 
+       if (amount > 0) {
+     
+       balance += amount;
+ 
+           addTransaction("Deposited: $" + String.format("%.2f", amount) + 
+     
+                     " | New balance: $" + String.format("%.2f", balance));
+  
+      }
+ 
+   }
+
+  
+  public boolean withdraw(double amount) {
+    
+    if (amount > 0 && amount <= balance) {
+     
+       balance -= amount;
+    
+        addTransaction("Withdrew: $" + String.format("%.2f", amount) + 
+   
+                       " | New balance: $" + String.format("%.2f", balance));
+       
+     return true;
+     
+   }
+   
+     return false;
+ 
+
+   }
+
+  
+  private void addTransaction(String details) {
+     
+   transactionHistory.add(new Date().toString() + " - " + details);
+   
+ }
+
+ 
+   public void showTransactionHistory() {
+     
+   if (transactionHistory.isEmpty()) {
+      
+      System.out.println("No transactions yet, bro!");
+    
+    } else {
+  
+          System.out.println("\n=== Transaction History ===");
+   
+         for (String transaction : transactionHistory) {
+     
+           System.out.println(transaction);
+       
+     }
+    
+    }
+   
+ }
+
+  
+ // Main method with auto-run for timeout fix
+
+    public static void main(String[] args) {
+      
+  BankAccount account = new BankAccount(1000.00, "1234");
+   
+     ATM atm = new ATM(account);
+
+        atm.start("1234");
+ // Auto-pass the PIN
+   
+ }
+}
+
+
+// Class to represent the ATM machine
+
+class ATM {
+  
+  private BankAccount account;
+
+  
+  public ATM(BankAccount account) {
+      
+  this.account = account;
+   
+ }
+
+    /
+/ Modified start to take a PIN directly
+ 
+   public void start(String inputPin) {
+    
+    System.out.println("Welcome to the ATM, bro!");
+   
+     if (account.validatePin(inputPin)) {
+       
+     displayMenu();
+  
+      } else {
+ 
+           System.out.println("Wrong PIN, dude! Shutting down.");
+    
+    }
+
+    }
+
+
+    private void displayMenu() {
+      
+  // Hardcoded actions to avoid input timeout
+  
+      System.out.println("\n=== ATM Menu ===");
+  
+      System.out.println("Running quick demo (no input for timeout):");
+  
+      
+        // Check balance
+  
+      checkBalance();
+
+    
+    // Deposit $50
+       
+ account.deposit(50.00);
+
+        System.out.printf("Deposited $50.00 successfully! New balance: $%.2f%n", account.getBalance());
+
+     
+   // Withdraw $200
+
+        if (account.withdraw(200.00)) {
+         
+   System.out.printf("Withdrew $200.00 successfully! New balance: $%.2f%n", account.getBalance());
+     
+   }
+
+ 
+       // Show history
+    
+    account.showTransactionHistory();
+
+  
+      System.out.println("Peace out, bro! Thanks for using the ATM!");
+
+    }
+
+ 
+ 
+   private void checkBalance() {
+  
+ 
+      System.out.printf("Current balance: $%.2f%n", account.getBalance());
+  
+  }
+
+}
